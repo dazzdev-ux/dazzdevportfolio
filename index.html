@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pj Espinosa - dazzdev | Developer Portfolio</title>
+    <meta name="description" content="Portfolio of Pj Espinosa (dazzdev), a Roblox Scripter, Front-End Web Developer, and UI-focused Software Developer.">
+    <meta name="keywords" content="Roblox Scripting, Luau, Front-End Development, Web Developer, Software Developer, Pj Espinosa, dazzdev">
+    <meta name="author" content="Pj Espinosa">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- GSAP kept for optional light use; most animations are CSS for performance -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        /* ========== RESET & BASE ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --cyan: #00ffff;
+            --blue: #0000ff;
+            --bg-dark: #0a0a0a;
+            --bg-mid: #1a1a2e;
+            --glass: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --text: #e8e8e8;
+            --muted: #a0a0b0;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-mid));
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.65;
+        }
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* ========== BACKGROUND ========== */
+        .background {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 0, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(128, 0, 128, 0.08) 0%, transparent 50%);
+            animation: bgShift 12s ease-in-out infinite alternate;
+        }
+        @keyframes bgShift {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(12px, 8px); }
+        }
+
+        /* ========== NAVIGATION ========== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 6%;
+            background: rgba(10, 10, 20, 0.75);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: background 0.3s;
+        }
+        .nav-logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--cyan);
+            letter-spacing: -0.5px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.25s;
+        }
+        .nav-links a:hover { color: var(--cyan); }
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background: var(--cyan);
+            transition: 0.3s;
+        }
+
+        /* ========== HERO ========== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 100px 20px 60px;
+        }
+        .hero h1 {
+            font-size: clamp(2.4rem, 6vw, 3.6rem);
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--cyan);
+            animation: glitch 3s infinite;
+        }
+        @keyframes glitch {
+            0%, 100% { text-shadow: 0 0 6px var(--cyan); }
+            45% { text-shadow: 2px 0 8px #0000ff, -2px 0 8px #800080; }
+            55% { text-shadow: -2px 0 8px #0000ff, 2px 0 8px #800080; }
+        }
+        .hero .alias {
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            color: #00bfff;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+        .hero .headline {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            margin-bottom: 32px;
+            max-width: 520px;
+            opacity: 0;
+            animation: fadeIn 1.4s 0.6s forwards;
+            color: var(--muted);
+        }
+        @keyframes fadeIn { to { opacity: 1; } }
+        .cta-button {
+            padding: 14px 32px;
+            background: linear-gradient(45deg, var(--cyan), #00bfff);
+            color: #000;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 0 24px rgba(0, 255, 255, 0.55);
+        }
+
+        /* ========== SECTIONS ========== */
+        section {
+            padding: 90px 6%;
+            max-width: 1200px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        section.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        h2 {
+            font-size: clamp(1.8rem, 4vw, 2.4rem);
+            margin-bottom: 28px;
+            color: var(--cyan);
+            text-align: center;
+            font-weight: 700;
+        }
+
+        /* About */
+        .about p {
+            font-size: 1.1rem;
+            text-align: center;
+            max-width: 780px;
+            margin: 0 auto;
+            color: #d0d0d8;
+        }
+
+        /* Skills */
+        .skills {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 22px;
+        }
+        .skill-card {
+            padding: 24px 20px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .skill-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(0, 255, 255, 0.22);
+        }
+        .skill-card h3 { margin-bottom: 12px; font-weight: 600; }
+        .skill-bar {
+            width: 100%;
+            height: 8px;
+            background: #2a2a3a;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .skill-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyan), #00bfff);
+            width: 0;
+            border-radius: 4px;
+        }
+        .skill-fill.luau { animation: fillBar 1.6s 0.2s forwards; --w: 90%; }
+        .skill-fill.systems { animation: fillBar 1.6s 0.4s forwards; --w: 85%; }
+        .skill-fill.web { animation: fillBar 1.6s 0.6s forwards; --w: 88%; }
+        @keyframes fillBar { to { width: var(--w); } }
+
+        /* Projects */
+        .projects { text-align: center; }
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+        .project-card {
+            padding: 18px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            text-align: left;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(0, 255, 255, 0.22);
+        }
+        .project-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 14px;
+        }
+        .project-card h3 { margin-bottom: 8px; color: var(--cyan); font-size: 1.2rem; }
+        .project-card p { flex: 1; color: #c8c8d0; font-size: 0.95rem; margin-bottom: 12px; }
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .project-tech span {
+            background: rgba(0, 255, 255, 0.15);
+            color: var(--cyan);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .project-links { display: flex; gap: 10px; margin-top: auto; }
+        .project-links a {
+            flex: 1;
+            text-align: center;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.25s;
+        }
+        .project-links .live {
+            background: linear-gradient(45deg, var(--cyan), #00bfff);
+            color: #000;
+        }
+        .project-links .github {
+            background: rgba(255,255,255,0.12);
+            color: var(--text);
+            border: 1px solid var(--glass-border);
+        }
+        .project-links a:hover { transform: translateY(-1px); opacity: 0.9; }
+
+        /* ========== ADMIN ========== */
+        .admin-toggle {
+            position: fixed;
+            bottom: 22px;
+            right: 22px;
+            width: 52px;
+            height: 52px;
+            background: rgba(0, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            z-index: 1000;
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+        .admin-toggle:hover { transform: scale(1.08); box-shadow: 0 0 16px rgba(0,255,255,0.4); }
+        .admin-panel {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            padding: 20px;
+        }
+        .admin-panel.show { display: flex; }
+        .login-form, .dashboard {
+            background: rgba(20, 20, 35, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            padding: 28px;
+            border-radius: 16px;
+            width: 440px;
+            max-width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: panelIn 0.45s ease;
+        }
+        @keyframes panelIn {
+            from { opacity: 0; transform: scale(0.96) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .login-form h3, .dashboard h3 { text-align: center; margin-bottom: 18px; color: var(--cyan); }
+        .login-form input, .dashboard input, .dashboard textarea, .dashboard select {
+            width: 100%;
+            margin: 8px 0;
+            padding: 12px 14px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.06);
+            color: var(--text);
+            font-family: inherit;
+            transition: border-color 0.25s, box-shadow 0.25s;
+        }
+        .login-form input:focus, .dashboard input:focus, .dashboard textarea:focus {
+            outline: none;
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.2);
+        }
+        .password-wrapper { position: relative; }
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .login-btn, .dashboard button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: linear-gradient(45deg, var(--cyan), #00bfff);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .login-btn:hover, .dashboard button:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,255,255,0.3); }
+        .login-btn.loading { opacity: 0.7; pointer-events: none; }
+        .error-msg {
+            color: #ff6b6b;
+            text-align: center;
+            margin: 8px 0;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .error-msg.show { opacity: 1; transform: translateY(0); }
+        .dashboard h4 { margin: 18px 0 8px; color: var(--cyan); }
+        .project-list-item {
+            background: rgba(255,255,255,0.05);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .project-list-item span { flex: 1; font-size: 0.95rem; }
+        .small-btn {
+            padding: 6px 12px !important;
+            width: auto !important;
+            margin: 0 4px !important;
+            font-size: 0.8rem !important;
+        }
+        .danger { background: #ff4d4d !important; color: white !important; }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 20, 0.95);
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+                gap: 16px;
+                display: none;
+                border-bottom: 1px solid var(--glass-border);
+            }
+            .nav-links.active { display: flex; }
+            .hamburger { display: flex; }
+            .hero { padding-top: 90px; }
+            .skills, .project-grid { grid-template-columns: 1fr; }
+            .login-form, .dashboard { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-logo">dazzdev</div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#about" onclick="closeMenu()">About</a></li>
+            <li><a href="#skills" onclick="closeMenu()">Skills</a></li>
+            <li><a href="#projects" onclick="closeMenu()">Projects</a></li>
+        </ul>
+        <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Pj Espinosa</h1>
+        <div class="alias">dazzdev</div>
+        <div class="headline">Roblox Scripter | Game Developer | Software Developer (Basic)</div>
+        <button class="cta-button" onclick="scrollToSection('about')">Explore My Work</button>
+    </section>
+
+    <!-- About Me -->
+    <section id="about" class="about">
+        <h2>About Me</h2>
+        <p>As a passionate developer, I specialize in Roblox scripting using Luau, creating immersive game systems including UI, DataStores, and mechanics. My expertise extends to game development, building interactive experiences with focus on gameplay, systems design, and polished user interfaces. I thrive on building sleek, interactive experiences that push the boundaries of technology.</p>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills" class="skills">
+        <h2>Skills</h2>
+        <div class="skill-card">
+            <h3>Roblox Luau</h3>
+            <div class="skill-bar"><div class="skill-fill luau"></div></div>
+        </div>
+        <div class="skill-card">
+            <h3>Game Systems (UI, DataStores, Mechanics)</h3>
+            <div class="skill-bar"><div class="skill-fill systems"></div></div>
+        </div>
+        <div class="skill-card">
+            <h3>HTML, CSS, JavaScript</h3>
+            <div class="skill-bar"><div class="skill-fill web"></div></div>
+        </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="projects">
+        <h2>Projects</h2>
+        <p id="noProjectsMsg">No projects yet. Content will be added soon.</p>
+        <div class="project-grid" id="projectGrid"></div>
+    </section>
+
+    <!-- Admin Toggle -->
+    <div class="admin-toggle" onclick="toggleAdminPanel()" title="Admin">🔐</div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <!-- Login Form -->
+        <div class="login-form" id="loginForm">
+            <h3>Admin Login</h3>
+            <p style="text-align:center; font-size:0.85rem; color:var(--muted); margin-bottom:14px;">
+                Frontend demo authentication only — not secure for production.
+            </p>
+            <input type="text" id="username" placeholder="Username" autocomplete="username">
+            <div class="password-wrapper">
+                <input type="password" id="password" placeholder="Password" autocomplete="current-password">
+                <button type="button" class="password-toggle" onclick="togglePassword()">👁️</button>
+            </div>
+            <div class="error-msg" id="errorMsg">Invalid username or password</div>
+            <button class="login-btn" id="loginBtn" onclick="login()">Login</button>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="dashboard" id="dashboard" style="display: none;">
+            <h3>Admin Dashboard</h3>
+
+            <h4>Existing Projects</h4>
+            <div id="projectList"></div>
+
+            <h4 id="formTitle">Add New Project</h4>
+            <input type="text" id="projectTitle" placeholder="Project Title">
+            <textarea id="projectDesc" placeholder="Project Description" rows="3"></textarea>
+            <input type="text" id="projectTech" placeholder="Technologies (comma separated)">
+            <input type="text" id="projectLive" placeholder="Live Demo URL (optional)">
+            <input type="text" id="projectGithub" placeholder="GitHub URL (optional)">
+            <input type="file" id="projectImage" accept="image/*">
+            <button onclick="saveProject()">Save Project</button>
+            <button onclick="clearForm()" style="background:#555; color:white;">Clear Form</button>
+
+            <h4>Edit Site Text</h4>
+            <textarea id="aboutText" placeholder="Edit About Me" rows="4"></textarea>
+            <button onclick="editAbout()">Update About</button>
+
+            <button onclick="logout()" style="background:#ff4d4d; color:white; margin-top:20px;">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== NAV ==========
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+        function closeMenu() {
+            document.getElementById('navLinks').classList.remove('active');
+        }
+
+        // ========== SCROLL ANIMATIONS ==========
+        const sections = document.querySelectorAll('section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('in-view');
+            });
+        }, { threshold: 0.15 });
+        sections.forEach(section => observer.observe(section));
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ========== AUTH (FRONTEND DEMO ONLY) ==========
+        // NOTE: This is a simple client-side demo login for portfolio admin.
+        // Credentials are hardcoded in JS and are NOT secure. Suitable only for personal/demo use.
+        let isLoggedIn = sessionStorage.getItem('adminLoggedIn') === 'true';
+        const adminPanel = document.getElementById('adminPanel');
+        const loginForm = document.getElementById('loginForm');
+        const dashboard = document.getElementById('dashboard');
+        const errorMsg = document.getElementById('errorMsg');
+        const loginBtn = document.getElementById('loginBtn');
+
+        function toggleAdminPanel() {
+            adminPanel.classList.toggle('show');
+            if (isLoggedIn) {
+                loginForm.style.display = 'none';
+                dashboard.style.display = 'block';
+                loadDashboard();
+            } else {
+                loginForm.style.display = 'block';
+                dashboard.style.display = 'none';
+                errorMsg.classList.remove('show');
+            }
+        }
+
+        function togglePassword() {
+            const pw = document.getElementById('password');
+            pw.type = pw.type === 'password' ? 'text' : 'password';
+        }
+
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            loginBtn.classList.add('loading');
+            loginBtn.textContent = 'Logging in...';
+
+            // Simulate brief delay for better UX
+            setTimeout(() => {
+                if (username === 'dazzdev' && password === 'admin') {
+                    isLoggedIn = true;
+                    sessionStorage.setItem('adminLoggedIn', 'true');
+                    errorMsg.classList.remove('show');
+                    toggleAdminPanel();
+                } else {
+                    errorMsg.classList.add('show');
+                }
+                loginBtn.classList.remove('loading');
+                loginBtn.textContent = 'Login';
+            }, 400);
+        }
+
+        function logout() {
+            isLoggedIn = false;
+            sessionStorage.removeItem('adminLoggedIn');
+            toggleAdminPanel();
+        }
+
+        // ========== PROJECTS (SAFE PERSISTENT STORAGE) ==========
+        // Projects are stored in localStorage under the key "projects".
+        // This survives refresh, close/reopen, and logout.
+        // NOTE: Some browsers block localStorage when the file is opened via file://.
+        // Serve the file through a local server (e.g. Live Server in VS Code) for reliable storage.
+
+        let editingId = null;
+
+        // Clear place to paste your real projects later.
+        // This array is ONLY used if localStorage is completely empty.
+        // It never overwrites existing saved projects.
+        const SEED_PROJECTS = [
+            {
+                id: "wifivendo-gt",
+                title: "WiFiVendo",
+                desc: "A promotional site for coin-based prepaid WiFi and professional home internet installation services. Fast, reliable, and affordable connectivity options.",
+                technologies: "HTML, CSS, JavaScript",
+                liveLink: "https://dazzdev-ux.github.io/wifivendoGT/",
+                githubLink: "",
+                image: ""
+            },
+            {
+                id: "gamedev-ai",
+                title: "GameDevAI",
+                desc: "Interactive tools that help spark game ideas, mechanics, story elements, and debugging inspiration. Built for game developers looking for quick creative assistance.",
+                technologies: "HTML, CSS, JavaScript",
+                liveLink: "https://dazzdev-ux.github.io/gamedev/",
+                githubLink: "",
+                image: ""
+            },
+            {
+                id: "untitled-fighting-game",
+                title: "Untitled Fighting Game",
+                desc: "A Roblox fighting game experience focused on combat mechanics and player interaction. Created with Luau scripting.",
+                technologies: "Luau, Roblox",
+                liveLink: "https://www.roblox.com/games/8288564985/untitled-fighting-game",
+                githubLink: "",
+                image: ""
+            },
+            {
+                id: "dazzdev-maguayan",
+                title: "ICT – Computer System Services",
+                desc: "A class website for Section 11-Maguayan showcasing the ICT Computer System Services program, skills in hardware, networking, troubleshooting, and student projects.",
+                technologies: "HTML, CSS, JavaScript",
+                liveLink: "https://dazzdev-ux.github.io/dazzdev-maguayan/",
+                githubLink: "",
+                image: ""
+            }
+        ];
+
+        function getProjects() {
+            try {
+                const raw = localStorage.getItem('projects');
+                if (!raw) return [];
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (err) {
+                console.warn('Could not read projects from localStorage:', err);
+                return [];
+            }
+        }
+
+        function saveProjects(projects) {
+            try {
+                localStorage.setItem('projects', JSON.stringify(projects));
+                return true;
+            } catch (err) {
+                console.error('Failed to save projects (possible quota or private mode):', err);
+                alert('Could not save projects. Try using a local server instead of opening the file directly, or reduce image sizes.');
+                return false;
+            }
+        }
+
+        // Assign IDs to old projects and ensure required fields exist
+        function migrateProjects() {
+            const projects = getProjects();
+            let changed = false;
+            projects.forEach(p => {
+                if (!p.id) {
+                    p.id = Date.now().toString() + Math.random().toString(36).slice(2, 7);
+                    changed = true;
+                }
+                if (p.technologies === undefined) p.technologies = '';
+                if (p.liveLink === undefined) p.liveLink = '';
+                if (p.githubLink === undefined) p.githubLink = '';
+                if (p.image === undefined) p.image = '';
+            });
+            if (changed) saveProjects(projects);
+        }
+
+        // Seed only when nothing is saved yet
+        function seedIfEmpty() {
+            if (getProjects().length === 0 && SEED_PROJECTS.length > 0) {
+                saveProjects(SEED_PROJECTS);
+            }
+        }
+
+        function renderProjects() {
+            const projects = getProjects();
+            const grid = document.getElementById('projectGrid');
+            const noMsg = document.getElementById('noProjectsMsg');
+            grid.innerHTML = '';
+
+            if (projects.length === 0) {
+                noMsg.style.display = 'block';
+                return;
+            }
+            noMsg.style.display = 'none';
+
+            projects.forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                const techHtml = project.technologies
+                    ? project.technologies.split(',').map(t => `<span>${t.trim()}</span>`).join('')
+                    : '';
+                const links = [];
+                if (project.liveLink) links.push(`<a href="${project.liveLink}" target="_blank" class="live">Live</a>`);
+                if (project.githubLink) links.push(`<a href="${project.githubLink}" target="_blank" class="github">GitHub</a>`);
+
+                card.innerHTML = `
+                    ${project.image ? `<img src="${project.image}" alt="${project.title}">` : ''}
+                    <h3>${project.title}</h3>
+                    <p>${project.desc}</p>
+                    ${techHtml ? `<div class="project-tech">${techHtml}</div>` : ''}
+                    ${links.length ? `<div class="project-links">${links.join('')}</div>` : ''}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderProjectList() {
+            const projects = getProjects();
+            const list = document.getElementById('projectList');
+            list.innerHTML = '';
+            if (projects.length === 0) {
+                list.innerHTML = '<p style="color:var(--muted); font-size:0.9rem;">No projects yet.</p>';
+                return;
+            }
+            projects.forEach(p => {
+                const item = document.createElement('div');
+                item.className = 'project-list-item';
+                item.innerHTML = `
+                    <span>${p.title}</span>
+                    <button class="small-btn" onclick="editProject('${p.id}')">Edit</button>
+                    <button class="small-btn danger" onclick="deleteProject('${p.id}')">Delete</button>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function loadDashboard() {
+            document.getElementById('aboutText').value = document.querySelector('.about p').textContent;
+            renderProjectList();
+            clearForm();
+        }
+
+        function clearForm() {
+            editingId = null;
+            document.getElementById('formTitle').textContent = 'Add New Project';
+            document.getElementById('projectTitle').value = '';
+            document.getElementById('projectDesc').value = '';
+            document.getElementById('projectTech').value = '';
+            document.getElementById('projectLive').value = '';
+            document.getElementById('projectGithub').value = '';
+            document.getElementById('projectImage').value = '';
+        }
+
+        function editProject(id) {
+            const projects = getProjects();
+            const project = projects.find(p => p.id === id);
+            if (!project) return;
+            editingId = id;
+            document.getElementById('formTitle').textContent = 'Edit Project';
+            document.getElementById('projectTitle').value = project.title;
+            document.getElementById('projectDesc').value = project.desc;
+            document.getElementById('projectTech').value = project.technologies || '';
+            document.getElementById('projectLive').value = project.liveLink || '';
+            document.getElementById('projectGithub').value = project.githubLink || '';
+            // Image is optional on edit — only updates if a new file is chosen
+            document.getElementById('projectImage').value = '';
+        }
+
+        function saveProject() {
+            const title = document.getElementById('projectTitle').value.trim();
+            const desc = document.getElementById('projectDesc').value.trim();
+            const technologies = document.getElementById('projectTech').value.trim();
+            const liveLink = document.getElementById('projectLive').value.trim();
+            const githubLink = document.getElementById('projectGithub').value.trim();
+            const imageFile = document.getElementById('projectImage').files[0];
+
+            if (!title || !desc) {
+                alert('Title and description are required.');
+                return;
+            }
+
+            const finishSave = (imageData) => {
+                const projects = getProjects();
+                if (editingId) {
+                    // Update existing by ID — never affects other projects
+                    const idx = projects.findIndex(p => p.id === editingId);
+                    if (idx !== -1) {
+                        projects[idx] = {
+                            ...projects[idx],
+                            title, desc, technologies, liveLink, githubLink,
+                            image: imageData || projects[idx].image
+                        };
+                    }
+                } else {
+                    // Add new — push only, preserves all existing projects
+                    projects.push({
+                        id: Date.now().toString() + Math.random().toString(36).slice(2, 7),
+                        title, desc, technologies, liveLink, githubLink,
+                        image: imageData || ''
+                    });
+                }
+                saveProjects(projects);
+                renderProjects();
+                renderProjectList();
+                clearForm();
+            };
+
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = e => finishSave(e.target.result);
+                reader.readAsDataURL(imageFile);
+            } else {
+                finishSave(null);
+            }
+        }
+
+        function deleteProject(id) {
+            if (!confirm('Delete this project permanently?')) return;
+            const projects = getProjects().filter(p => p.id !== id);
+            saveProjects(projects);
+            renderProjects();
+            renderProjectList();
+            if (editingId === id) clearForm();
+        }
+
+        function editAbout() {
+            const newText = document.getElementById('aboutText').value;
+            document.querySelector('.about p').textContent = newText;
+            localStorage.setItem('aboutText', newText);
+        }
+
+        // ========== INIT ==========
+        window.onload = function() {
+            migrateProjects();
+            seedIfEmpty();
+            const savedAbout = localStorage.getItem('aboutText');
+            if (savedAbout) document.querySelector('.about p').textContent = savedAbout;
+            renderProjects();
+
+            // Optional light GSAP entrance for hero (skipped if reduced motion)
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && typeof gsap !== 'undefined') {
+                gsap.from('.hero h1, .hero .alias, .hero .headline, .cta-button', {
+                    y: 30, opacity: 0, duration: 0.8, stagger: 0.15, ease: 'power2.out'
+                });
+            }
+        };
+    </script>
+</body>
+</html>
